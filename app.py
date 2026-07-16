@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import psycopg
+import sqlite3
 import os
 import math
 

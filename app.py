@@ -3,6 +3,7 @@ import os
 import psycopg
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
+
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -52,7 +53,7 @@ def get_posts():
 
     offset = (page - 1) * limit
 
-    conn = sqlite3.connect("blog.db")
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
 
     cursor.execute("SELECT COUNT(*) FROM posts")
@@ -64,7 +65,7 @@ def get_posts():
         """
         SELECT * FROM posts
         ORDER BY id DESC
-        LIMIT ? OFFSET ?
+        LIMIT %s OFFSET %s
         """,
         (limit, offset)
     )
@@ -126,14 +127,14 @@ def add_post():
 
     image.save(filepath)
 
-    conn = sqlite3.connect("blog.db")
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
 
     cursor.execute(
         """
     INSERT INTO posts
     (title, content, location, image )
-    VALUES (?, ?, ?, ?)
+    VALUES (%s, %s, %s, %s)
     """,
         (
             title,
@@ -146,7 +147,7 @@ def add_post():
 
     conn.commit()
 
-    post_id = cursor.lastrowid
+    post_id = cursor.fetchone()[0]
 
     conn.close()
 

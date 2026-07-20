@@ -152,7 +152,6 @@ def add_post():
     conn.commit()
 
     cursor.close()
-
     conn.close()
 
     return jsonify({

@@ -1,7 +1,11 @@
-from flask import Flask, request, jsonify
-import sqlite3
-import os
 import math
+import os
+import psycopg
+from flask import Flask, request, jsonify
+from dotenv import load_dotenv
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 app = Flask(__name__)
 
@@ -19,12 +23,12 @@ def allowed_file(filename):
 
 # Create Database and Table
 def init_db():
-    conn = sqlite3.connect("blog.db")
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS posts (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             title TEXT,
             content TEXT,
             location TEXT,

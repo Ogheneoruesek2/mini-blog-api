@@ -149,7 +149,6 @@ def add_post():
     )
 
     post_id = cursor.fetchone()[0]
-
     conn.commit()
 
     cursor.close()

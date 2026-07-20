@@ -137,6 +137,7 @@ def add_post():
     INSERT INTO posts
     (title, content, location, image )
     VALUES (%s, %s, %s, %s)
+    RETURNING id
     """,
         (
             title,

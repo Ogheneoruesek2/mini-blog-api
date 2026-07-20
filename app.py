@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable is not set.")
 
 app = Flask(__name__)
 
@@ -145,9 +147,11 @@ def add_post():
 
     )
 
+    post_id = cursor.fetchone()[0]
+
     conn.commit()
 
-    post_id = cursor.fetchone()[0]
+    cursor.close()
 
     conn.close()
 
